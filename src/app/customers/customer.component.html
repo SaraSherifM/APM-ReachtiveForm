@@ -6,7 +6,7 @@
   <div class="card-body">
     <form novalidate
           (ngSubmit)="save()"
-          [formGroup] ="customerForm">
+          [formGroup]="customerForm">
 
       <div class="form-group row mb-2">
         <label class="col-md-2 col-form-label"
@@ -16,7 +16,7 @@
                  id="firstNameId"
                  type="text"
                  placeholder="First Name (required)"
-                 formControlName ="firstName"
+                 formControlName="firstName"
                  [ngClass]="{'is-invalid': (customerForm.get('firstName').touched || customerForm.get('firstName').dirty) && !customerForm.get('firstName').valid }" />
           <span class="invalid-feedback">
             <span *ngIf="customerForm.get('firstName').errors?.required">
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <div class="form-group row mb-2">
+      <!-- <div class="form-group row mb-2">
         <label class="col-md-2 col-form-label"
                for="lastNameId">Check</label>
         <div class="col-md-8">
@@ -60,8 +60,8 @@
                  formControlName="checkBox"
           />
         </div>
-      </div>
-      <div class="form-group row mb-2">
+      </div> -->
+      <!-- <div class="form-group row mb-2">
         <label class="col-md-2 col-form-label"
                for="lastNameId">Check2222</label>
         <div class="col-md-8">
@@ -71,7 +71,7 @@
                  formControlName="checkBox2"
           />
         </div>
-      </div>
+      </div> -->
 
 
       <div formGroupName="emailGroup">
@@ -99,7 +99,7 @@
             </span>
           </div>
         </div>
-  
+
         <div class="form-group row mb-2">
           <label class="col-md-2 col-form-label"
                  for="emailId">Confirm Email</label>
@@ -136,7 +136,7 @@
                  [ngClass]="{'is-invalid': !customerForm.get('phone').valid }" />
           <span class="invalid-feedback">
             <span *ngIf="customerForm.get('phone').errors?.required">
-              Please enter your email address.
+              Please enter valid phone number.
             </span>
           </span>
         </div>
@@ -191,108 +191,124 @@
               <input class="form-check-input"
                      id="sendCatalogId"
                      type="checkbox"
-                     formControlName="sandCatalog"
-                     > Send me your catalog
+                     formControlName="sandCatalog"> Send me your catalog
             </label>
           </div>
         </div>
       </div>
 
-      <!-- <div *ngIf="customer.sendCatalog">
-        <div class="form-group row mb-2">
-          <label class="col-md-2 col-form-label pt-0">Address Type</label>
-          <div class="col-md-8">
-            <div class="form-check form-check-inline">
-              <label class="form-check-label">
-                <input class="form-check-input"
-                       id="addressType1Id"
-                       type="radio"
-                       value="home"
-                       name="addressType"> Home
-              </label>
+      <div *ngIf="customerForm.get('sandCatalog').value">
+        <div formArrayName="addresses" *ngFor="let address of addresses.controls;let i =index">
+          <div [formGroupName]="i"> 
+            <div class="form-group row mb-2">
+              <label class="col-md-2 col-form-label pt-0">Address Type</label>
+              <div class="col-md-8">
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input"
+                           id="addressType1Id"
+                           type="radio"
+                           value="home"
+                           formControlName="addressType"> Home
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input"
+                           id="addressType1Id"
+                           type="radio"
+                           value="work"
+                           formControlName="addressType"> Work
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <label class="form-check-label">
+                    <input class="form-check-input"
+                           id="addressType1Id"
+                           type="radio"
+                           value="other"
+                           formControlName="addressType"> Other
+                  </label>
+                </div>
+
+              </div>
+
             </div>
-            <div class="form-check form-check-inline">
-              <label class="form-check-label">
-                <input class="form-check-input"
-                       id="addressType1Id"
-                       type="radio"
-                       value="work"
-                       name="addressType"> Work
-              </label>
+
+            <div class="form-group row mb-2">
+              <label class="col-md-2 col-form-label"
+                     attr.for="{{ 'street1Id + i' }}">Street Address 1</label>
+              <div class="col-md-8">
+                <input class="form-control"
+                       id="{{ 'street1Id + i' }}"
+                       type="text"
+                       placeholder="Street address"
+                       formControlName="street1">
+              </div>
             </div>
-            <div class="form-check form-check-inline">
-              <label class="form-check-label">
-                <input class="form-check-input"
-                       id="addressType1Id"
-                       type="radio"
-                       value="other"
-                       name="addressType"> Other
-              </label>
+
+            <div class="form-group row mb-2">
+              <label class="col-md-2 col-form-label"
+                     attr.for="{{ 'street2Id + i' }}">Street Address 2</label>
+              <div class="col-md-8">
+                <input class="form-control"
+                       id="{{ 'street2Id + i' }}"
+                       type="text"
+                       placeholder="Street address (second line)"
+                       formControlName="street2">
+              </div>
+            </div>
+
+            <div class="form-group row mb-2">
+              <label class="col-md-2 col-form-label"
+                     attr.for="{{ 'cityId + i' }}">City, State, Zip Code</label>
+              <div class="col-md-3">
+                <input class="form-control"
+                       id="{{ 'cityId + i' }}"
+                       type="text"
+                       placeholder="City"
+                       formControlName="city">
+              </div>
+              <div class="col-md-3">
+                <select class="form-control"
+                        id="stateId"
+                        formControlName="state">
+                  <option value=""
+                          disabled
+                          selected
+                          hidden>Select a State...</option>
+                  <option value="AL">Alabama</option>
+                  <option value="AK">Alaska</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="AR">Arkansas</option>
+                  <option value="CA">California</option>
+                  <option value="CO">Colorado</option>
+                  <option value="WI">Wisconsin</option>
+                  <option value="WY">Wyoming</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <input class="form-control"
+                       id="zipId"
+                       type="number"
+                       placeholder="Zip Code"
+                       formControlName="zip">
+              </div>
             </div>
           </div>
         </div>
 
         <div class="form-group row mb-2">
-          <label class="col-md-2 col-form-label"
-                 for="street1Id">Street Address 1</label>
-          <div class="col-md-8">
-            <input class="form-control"
-                   id="street1Id"
-                   type="text"
-                   placeholder="Street address"
-                   name="street1">
+          <div class="col-md-4">
+            <button class="btn btn-outline-primary"
+            type="button"
+            [disabled]="!addresses.valid"
+            (click)="addAddress()">
+            Add Another Address
+            </button>
           </div>
         </div>
-
-        <div class="form-group row mb-2">
-          <label class="col-md-2 col-form-label"
-                 for="street2Id">Street Address 2</label>
-          <div class="col-md-8">
-            <input class="form-control"
-                   id="street2Id"
-                   type="text"
-                   placeholder="Street address (second line)"
-                   name="street2">
-          </div>
-        </div>
-
-        <div class="form-group row mb-2">
-          <label class="col-md-2 col-form-label"
-                 for="cityId">City, State, Zip Code</label>
-          <div class="col-md-3">
-            <input class="form-control"
-                   id="cityId"
-                   type="text"
-                   placeholder="City"
-                   name="city">
-          </div>
-          <div class="col-md-3">
-            <select class="form-control"
-                    id="stateId"
-                    name="state">
-              <option value=""
-                      disabled
-                      selected
-                      hidden>Select a State...</option>
-              <option value="AL">Alabama</option>
-              <option value="AK">Alaska</option>
-              <option value="AZ">Arizona</option>
-              <option value="AR">Arkansas</option>
-              <option value="CA">California</option>
-              <option value="CO">Colorado</option>
-              <option value="WI">Wisconsin</option>
-              <option value="WY">Wyoming</option>
-            </select>
-          </div>
-          <div class="col-md-2">
-            <input class="form-control"
-                   id="zipId"
-                   type="number"
-                   placeholder="Zip Code"
-                   name="zip">
-          </div>
-        </div>
-      </div>  -->
+      </div>
 
       <div class="form-group row mb-2">
         <div class="offset-md-2 col-md-4">
@@ -304,15 +320,18 @@
             Save
           </button>
 
-          <button class="btn-btn-outline-secondary" type="button"
-          (click)="populateTestData()">
-          Test Data
+          <button class="btn-btn-outline-secondary"
+                  type="button"
+                  (click)="populateTestData()">
+            Test Data
           </button>
         </div>
       </div>
+
     </form>
   </div>
 </div>
+<br> sandCatalog Value: {{customerForm.get('sandCatalog').value}}
 <br>Dirty: {{ customerForm.dirty }}
 <br>Touched: {{ customerForm.touched }}
 <br>Valid: {{ customerForm.valid }}

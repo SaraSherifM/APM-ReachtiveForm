@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn} from '@angular/forms'
+import {FormGroup, FormBuilder,FormArray, Validators, AbstractControl, ValidatorFn} from '@angular/forms'
 import { Customer } from './customer';
 import { debounceTime } from 'rxjs/operators'
 
@@ -51,6 +51,14 @@ export class CustomerComponent implements OnInit {
 
   checked:boolean = true;
 
+  get addresses():FormArray{
+    return <FormArray> this.customerForm.get('addresses');
+  }
+
+  addAddress():void{
+    this.addresses.push(this.buildAdresses());
+  }
+
   private validationMessages = {
     required: 'Please enter your email address.',
     email: 'Please enter a valid email address.'
@@ -63,7 +71,7 @@ export class CustomerComponent implements OnInit {
       lastName:['', [Validators.required , Validators.maxLength(50)]],
 
       checkBox: false,
-      checkBox2: this.isChecked('sara'),
+      //checkBox2: this.isChecked('sara'),
       emailGroup : this.fb.group({
       email:['', [Validators.email , Validators.required]],
 
@@ -73,7 +81,8 @@ export class CustomerComponent implements OnInit {
       sandCatalog: true,
       phone:[''],
       notification:['email'],
-      rating: [null, ratingRange(1,5)]
+      rating: ['', ratingRange(1,5)],
+      addresses: this.fb.array([ this.buildAdresses( ) ])
     });
     // this.customerForm = new FormGroup({
     //   firstName: new FormControl(),      
@@ -116,6 +125,16 @@ export class CustomerComponent implements OnInit {
 
   }
 
+  buildAdresses():FormGroup{
+    return this.fb.group({
+      addressType:'',
+      street1:'',
+      street2:'',
+      city:'',
+      state:'',
+      zip:''
+    })
+  }
   save() {
     console.log('Saved: ' + JSON.stringify(this.customerForm.value));
   }
